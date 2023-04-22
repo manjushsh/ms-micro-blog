@@ -12,7 +12,7 @@ const PostList = () => {
     const [posts, setPosts] = useState({});
 
     const getAllPosts = () => {
-        axios.get(GlobalConfig.POSTS_ENDPOINT)
+        axios.get(`${GlobalConfig.QUERY_BASE_ENDPOINT}/posts`)
             .then(data => setPosts(data?.data || {}))
             .catch(err => console.error("Caught Error while fetching posts."));
     }

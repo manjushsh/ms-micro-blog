@@ -1,9 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import BasicCard from '../common/card';
 import GlobalConfig from '../configs';
-import CreateAComment from '../create-comment';
 import './styles.css';
 
 const CommentList = ({ postId }) => {
@@ -23,14 +21,16 @@ const CommentList = ({ postId }) => {
     return (
         <div className="container">
             <div className='post_list_container'>
-                <span>{comments?.length || 'No'} Comments</span>
-                <ul>
-                    {comments?.length ? (
-                        comments?.map(comment => (
-                            <li>{comment?.content}</li>
-                        ))
-                    ) : ''}
-                </ul>
+                <div>{comments?.length || 'No'} Comments</div>
+                <div>
+                    <ul>
+                        {comments?.length ? (
+                            comments?.map(comment => (
+                                <li>{comment?.content}</li>
+                            ))
+                        ) : ''}
+                    </ul>
+                </div>
             </div>
         </div>
     )
