@@ -1,17 +1,21 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
+import GlobalConfig from '../configs';
 import './styles.css';
 
 const CommentList = ({ comments }) => {
 
-    // const [comments, setComments] = useState([]);
-    // const getAllCommentsOfPost = () => {
-    //     if (postId?.length) {
-    //         axios.get(`${GlobalConfig.COMMENTS_ENDPOINT}/posts/${postId}/comments`)
-    //             .then(data => setComments(data?.data || {}))
-    //             .catch(err => console.error("Caught Error while fetching comments of the post."));
-    //     }
-    // }
-    // useEffect(() => { getAllCommentsOfPost() }, []);
+    const moderateComment = (comment) => {
+        switch (comment?.status) {
+            case GlobalConfig.COMMENT_STATUS.PENDING:
+                return 'This comment is being checked';
+            case GlobalConfig.COMMENT_STATUS.APPROVED:
+                return comment?.content || '';
+            case GlobalConfig.COMMENT_STATUS.REJECTED:
+                return 'This comment has been rejected';
+            default:
+                return ''
+        }
+    }
 
     return (
         <div className="container">
@@ -21,7 +25,7 @@ const CommentList = ({ comments }) => {
                     <ul>
                         {comments?.length ? (
                             comments?.map(comment => (
-                                <li>{comment?.content}</li>
+                                <li>{moderateComment(comment)}</li>
                             ))
                         ) : ''}
                     </ul>
