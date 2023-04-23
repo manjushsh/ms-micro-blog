@@ -1,11 +1,12 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const GlobalConfig = require('../event-bus/configs');
 
 const app = express();
 app.use(bodyParser.json());
 app.use(cors());
-const QUERY_PORT = 4002;
+const QUERY_PORT = GlobalConfig.PORTS.QUERY;
 const posts = {};
 
 app.get('/posts', (req, res) => {

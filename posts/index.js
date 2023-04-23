@@ -8,7 +8,7 @@ const GlobalConfig = require('../event-bus/configs');
 const app = express();
 app.use(bodyParser.json());
 app.use(cors());
-const POSTS_PORT = 4000;
+const POSTS_PORT = GlobalConfig.PORTS.POSTS;
 const posts = {};
 
 app.get('/posts', (req, res) => {

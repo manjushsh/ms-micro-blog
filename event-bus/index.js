@@ -5,7 +5,7 @@ const GlobalConfig = require('./configs');
 
 const app = express();
 app.use(bodyParser.json());
-const EVENT_BUS_PORT = 4005;
+const EVENT_BUS_PORT = GlobalConfig.PORTS.EVENTS;
 
 app.post('/events', (req, res) => {
   const event = req.body;
@@ -19,7 +19,7 @@ app.post('/events', (req, res) => {
     console.log(err.message);
   });
   res.send({ status: 'OK' });
-})
+});
 
 app.listen(EVENT_BUS_PORT, () => {
   console.log("Events server started. Listning on Port:", EVENT_BUS_PORT);
