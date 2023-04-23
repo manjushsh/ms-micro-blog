@@ -9,8 +9,8 @@ const CreateAComment = (props) => {
     const onCommentCreate = e => {
         e?.preventDefault();
         if (content?.length && props?.postId?.length) {
-            axios.post(`${GlobalConfig.COMMENTS_ENDPOINT}/${props?.postId}/comments`, { content })
-                .then(() => setContent(''))
+            axios.post(`${GlobalConfig.COMMENTS_ENDPOINT}/posts/${props?.postId}/comments`, { content })
+                .then(() => {setContent('')})
                 .catch(err => console.error("Caught Error while creating the comment"))
         }
     }

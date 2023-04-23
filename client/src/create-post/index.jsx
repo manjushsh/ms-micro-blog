@@ -9,7 +9,7 @@ const CreateAPost = () => {
     const onPostCreate = e => {
         e?.preventDefault();
         if (title?.length) {
-            axios.post(GlobalConfig.POSTS_ENDPOINT, { title })
+            axios.post(`${GlobalConfig.POSTS_ENDPOINT}/posts`, { title })
                 .then(() => setTitle(''))
                 .catch(err => console.error("Caught Error while creating a post"))
         }

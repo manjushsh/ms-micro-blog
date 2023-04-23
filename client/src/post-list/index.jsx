@@ -12,7 +12,7 @@ const PostList = () => {
     const [posts, setPosts] = useState({});
 
     const getAllPosts = () => {
-        axios.get(GlobalConfig.POSTS_ENDPOINT)
+        axios.get(`${GlobalConfig.QUERY_BASE_ENDPOINT}/posts`)
             .then(data => setPosts(data?.data || {}))
             .catch(err => console.error("Caught Error while fetching posts."));
     }
@@ -31,7 +31,7 @@ const PostList = () => {
                         <BasicCard key={post?.id}>
                             <h5 className="card-title">{post?.title}</h5>
                             <hr className='my-4' />
-                            <CommentList postId={post?.id} />
+                            <CommentList comments={post.comments || []} />
                             <CreateAComment postId={post?.id} />
                         </BasicCard>
                     ))
