@@ -18,6 +18,9 @@ app.post('/events', (req, res) => {
   axios.post(`${GlobalConfig.QUERY_BASE_ENDPOINT}/events`, event).catch((err) => {
     console.log(err.message);
   });
+  axios.post(`${GlobalConfig.MODERATION_BASE_ENDPOINT}/events`, event).catch((err) => {
+    console.log(err.message);
+  });
   res.send({ status: 'OK' });
 });
 

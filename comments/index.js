@@ -21,15 +21,16 @@ app.post("/posts/:id/comments", async (req, res) => {
     const commentId = randomBytes(16).toString("hex");
     const { content } = req.body;
     const comments = commentsByPostId[req.params.id] || [];
-    comments.push({ id: commentId, content });
+    comments.push({ id: commentId, content, status: GlobalConfig.COMMENT_STATUS.PENDING });
     commentsByPostId[req.params.id] = comments;
 
     await axios.post(`${GlobalConfig.EVENT_BASE_ENDPOINT}/events`, {
-      type: "CommentCreated",
+      type: GlobalConfig.EVENT_TYPES.COMMENT_CREATED,
       data: {
         id: commentId,
         content,
         postId: req.params.id,
+        status: GlobalConfig.COMMENT_STATUS.PENDING,
       },
     });
 
@@ -40,7 +41,23 @@ app.post("/posts/:id/comments", async (req, res) => {
   }
 });
 
-app.post("/events", (req, res) => {
+app.post("/events", async (req, res) => {
+  const { type, data } = req.body;
+  switch (type) {
+    case GlobalConfig.EVENT_TYPES.COMMENT_MODERATED:
+      const { content, id, postId, status } = data;
+      const comments = commentsByPostId[postId];
+      const comment = comments.find(c => c.id === id);
+      comment.status = status;
+      // Emit event once moderation done
+      await axios.post(`${GlobalConfig.EVENT_BASE_ENDPOINT}/events`, {
+        type: GlobalConfig.EVENT_TYPES.COMMENT_UPDATED,
+        data: { content, id, postId, status },
+      });
+      break;
+    default:
+      break;
+  }
   console.log("Event Received", req.body.type);
 
   res.send({});

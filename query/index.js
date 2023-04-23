@@ -10,19 +10,21 @@ const QUERY_PORT = GlobalConfig.PORTS.QUERY;
 const posts = {};
 
 app.get('/posts', (req, res) => {
-    console.log(posts);
-    res.send(posts)
+    res.send(posts);
 });
 
 app.post('/events', async (req, res) => {
     const { type } = req.body;
     console.log(type);
     switch (type) {
-        case 'PostCreated':
+        case GlobalConfig.EVENT_TYPES.POST_CREATED:
             postCreated(req);
             break;
-        case 'CommentCreated':
+        case GlobalConfig.EVENT_TYPES.COMMENT_CREATED:
             commentCreated(req);
+            break;
+        case GlobalConfig.EVENT_TYPES.COMMENT_UPDATED:
+            commentUpdated(req);
             break;
         default:
             return;
@@ -40,8 +42,17 @@ const postCreated = (req) => {
 }
 
 const commentCreated = (req) => {
-    const { id, content, postId } = req.body?.data;
+    const { id, content, postId, status } = req.body?.data;
     const post = posts[postId] || null;
-    post?.comments?.push({ id, content });
-    posts[postId] = post;
+    post.comments.push({ id, content, status });
+}
+
+const commentUpdated = (req) => {
+    const { id, content, postId, status } = req.body?.data;
+
+    const post = posts[postId];
+    const comment = post.comments.find(c => c.id === id);
+
+    comment.status = status;
+    comment.content = content;
 }
