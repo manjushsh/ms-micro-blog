@@ -31,7 +31,7 @@ const PostList = () => {
                         <BasicCard key={post?.id}>
                             <h5 className="card-title">{post?.title}</h5>
                             <hr className='my-4' />
-                            <CommentList postId={post?.id} />
+                            <CommentList comments={post.comments || []} />
                             <CreateAComment postId={post?.id} />
                         </BasicCard>
                     ))
