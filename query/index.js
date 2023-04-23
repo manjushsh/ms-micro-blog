@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const axios = require('axios');
 const GlobalConfig = require('../event-bus/configs');
 
 const app = express();
@@ -14,41 +15,53 @@ app.get('/posts', (req, res) => {
 });
 
 app.post('/events', async (req, res) => {
-    const { type } = req.body;
-    console.log(type);
+    handleEvent(req);
+    res.send({});
+});
+
+app.listen(QUERY_PORT, async () => {
+    console.log("Query server started. Listning on Port:", QUERY_PORT);
+    try {
+        const res = await axios.get(`${GlobalConfig.EVENT_BASE_ENDPOINT}/events`);
+    
+        for (let event of res.data) {
+          console.log("Processing event:", event.type);
+          handleEvent(event.type, event.data);
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
+});
+
+const handleEvent = (type, data) => {
     switch (type) {
         case GlobalConfig.EVENT_TYPES.POST_CREATED:
-            postCreated(req);
+            postCreated(data);
             break;
         case GlobalConfig.EVENT_TYPES.COMMENT_CREATED:
-            commentCreated(req);
+            commentCreated(data);
             break;
         case GlobalConfig.EVENT_TYPES.COMMENT_UPDATED:
-            commentUpdated(req);
+            commentUpdated(data);
             break;
         default:
             return;
     }
-    res.send({});
-});
+}
 
-app.listen(QUERY_PORT, () => {
-    console.log("Query server started. Listning on Port:", QUERY_PORT);
-});
-
-const postCreated = (req) => {
-    const { id, title } = req.body?.data;
+const postCreated = (data) => {
+    const { id, title } = data;
     posts[id] = { id, title, comments: [] };
 }
 
-const commentCreated = (req) => {
-    const { id, content, postId, status } = req.body?.data;
+const commentCreated = (data) => {
+    const { id, content, postId, status } = data;
     const post = posts[postId] || null;
     post.comments.push({ id, content, status });
 }
 
-const commentUpdated = (req) => {
-    const { id, content, postId, status } = req.body?.data;
+const commentUpdated = (data) => {
+    const { id, content, postId, status } = data;
 
     const post = posts[postId];
     const comment = post.comments.find(c => c.id === id);

@@ -6,9 +6,12 @@ const GlobalConfig = require('./configs');
 const app = express();
 app.use(bodyParser.json());
 const EVENT_BUS_PORT = GlobalConfig.PORTS.EVENTS;
+const events = [];
 
 app.post('/events', (req, res) => {
   const event = req.body;
+  events.push(event);
+
   axios.post(`${GlobalConfig.POSTS_BASE_ENDPOINT}/events`, event).catch((err) => {
     console.log(err.message);
   });
@@ -24,6 +27,10 @@ app.post('/events', (req, res) => {
   res.send({ status: 'OK' });
 });
 
-app.listen(EVENT_BUS_PORT, () => {
+app.get('/events', (req, res) => {
+  res.send(events);
+});
+
+app.listen(EVENT_BUS_PORT, async () => {
   console.log("Events server started. Listning on Port:", EVENT_BUS_PORT);
 })

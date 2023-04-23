@@ -7,7 +7,7 @@ const CommentList = ({ comments }) => {
     const moderateComment = (comment) => {
         switch (comment?.status) {
             case GlobalConfig.COMMENT_STATUS.PENDING:
-                return 'This comment is being checked';
+                return 'This comment is awaiting moderation';
             case GlobalConfig.COMMENT_STATUS.APPROVED:
                 return comment?.content || '';
             case GlobalConfig.COMMENT_STATUS.REJECTED:
