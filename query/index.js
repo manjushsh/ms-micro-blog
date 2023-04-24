@@ -15,7 +15,7 @@ app.get('/posts', (req, res) => {
 });
 
 app.post('/events', async (req, res) => {
-    handleEvent(req);
+    handleEvent(req.body?.type, req.body?.data);
     res.send({});
 });
 
